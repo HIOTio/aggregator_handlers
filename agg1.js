@@ -6,11 +6,12 @@ module.exports = {
     // NOTE: need to implement a light workflow here, to ensure that sensor readings are synced up with the aggregator
     var readings = [];
     var min = 0;
+    var i=0;
     var max = 0;
     var mean = 0;
     var count = 0;
     var sensorReadings = [];
-    for (var i = 0; i < args.topics.length; i++) {
+    for ( i = 0; i < args.topics.length; i++) {
       if (data[args.topics[i]]) {
         sensorReadings = data[args.topics[i]];
         readings.push(sensorReadings);
@@ -27,29 +28,19 @@ module.exports = {
     }
     var resp = JSON.stringify({
       date: Date.now(),
-      min: min,
-      max: max,
-      count: count,
-      mean: mean,
-      readings: readings
+      min,
+      max,
+      count,
+      mean,
+      readings
     });
     // clear data for this aggregator
-    for (var i = 0; i < args.topics.length; i++) {
+    for ( i = 0; i < args.topics.length; i++) {
       data[args.topics[i]] = [];
     }
     return resp;
   },
-  message (args) {
- //   console.log(args.channel)
-    return JSON.stringify({
-      'aggregates': getAggregate(args),
-      'readings': getReadings(args)
-    })
-  },
-  parse(message, sensor) {
- //   console.log(sensor)
- //   console.log(message.toString())
-  },
+
   handleMessage (topic, message) {
     if (!data[topic]) {
       data[topic] = []
